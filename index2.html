@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>📦 ส่งของ - ระบบแก๊ง</title>
+  <style>
+    body {
+      background-color: #0f0f1e;
+      color: #fff;
+      font-family: 'Kanit', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    input, select, button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: none;
+      width: 300px;
+    }
+    button {
+      background-color: #00c853;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #00b248;
+    }
+  </style>
+</head>
+<body>
+  <h1>📦 แจ้งส่งของ</h1>
+
+  <input type="text" id="name" placeholder="ชื่อในเกม">
+  
+  <select id="itemType">
+    <option value="">-- เลือกประเภทของ --</option>
+    <option value="เงิน">💰 เงิน</option>
+  </select>
+
+  <input type="number" id="amount" placeholder="จำนวน (เช่น 5)">
+
+  <button onclick="sendItem()">ส่งของ</button>
+
+  <script>
+    function sendItem() {
+      const name = document.getElementById("name").value.trim();
+      const type = document.getElementById("itemType").value;
+      const amount = document.getElementById("amount").value;
+
+      if (!name || !type || !amount || parseInt(amount) <= 0) {
+        alert("กรอกข้อมูลให้ครบและถูกต้องก่อน!");
+        return;
+      }
+
+      const webhookUrl = "https://discord.com/api/webhooks/1388282239242211498/KqlcwTzCeWlY7vErgQoz_W95apiYcmCX2EaVHZ3QQU7JcL_46w1lnxQmlF0K8LqvzzGr";
+
+      const payload = {
+        embeds: [
+          {
+            title: "📦 รายงานการส่งของ",
+            color: 65280, // เขียว
+            fields: [
+              { name: "👤 ชื่อผู้ส่ง", value: name, inline: true },
+              { name: "🧾 ประเภทของ", value: type, inline: true },
+              { name: "🔢 จำนวน", value: `${amount} ชิ้น` }
+            ],
+            timestamp: new Date().toISOString()
+          }
+        ]
+      };
+
+      fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }).then(res => {
+        if (res.ok) {
+          alert("ส่งของเรียบร้อยแล้ว!");
+          document.getElementById("name").value = "";
+          document.getElementById("itemType").value = "";
+          document.getElementById("amount").value = "";
+        } else {
+          alert("ส่งของไม่สำเร็จ ลองใหม่!");
+        }
+      });
+    }
+  </script>
+</body>
+</html>

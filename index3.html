@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>👤 เพิ่มสมาชิกแก๊ง</title>
+  <style>
+    body {
+      background-color: #0f0f1e;
+      color: #fff;
+      font-family: 'Kanit', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    input, select, button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: none;
+      width: 300px;
+    }
+    button {
+      background-color: #673ab7;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #512da8;
+    }
+  </style>
+</head>
+<body>
+  <h1>👤 เพิ่มสมาชิกใหม่</h1>
+
+  <input type="text" id="name" placeholder="ชื่อในเกม">
+  <input type="text" id="discord" placeholder="Discord (เช่น: User#1234)">
+  <input type="date" id="joinDate">
+  <select id="role">
+    <option value="">-- เลือกตำแหน่ง --</option>
+    <option value="สมาชิก">สมาชิก</option>
+  </select>
+
+  <button onclick="addMember()">เพิ่มสมาชิก</button>
+
+  <script>
+    function addMember() {
+      const name = document.getElementById("name").value.trim();
+      const discord = document.getElementById("discord").value.trim();
+      const joinDate = document.getElementById("joinDate").value;
+      const role = document.getElementById("role").value;
+
+      if (!name || !discord || !joinDate || !role) {
+        alert("กรุณากรอกข้อมูลให้ครบ!");
+        return;
+      }
+
+      const webhookUrl = "https://discord.com/api/webhooks/1388283293501231236/UsPRrvo-VAXgbaivxemjnNmmvGRuwjHWwzM2heEfrXbezrBesMXkLybDx6_oRA5DuJTN";
+
+      const payload = {
+        embeds: [
+          {
+            title: "🎉 สมาชิกใหม่เข้าแก๊ง!",
+            color: 10027263, // สีม่วง
+            fields: [
+              { name: "👤 ชื่อในเกม", value: name, inline: true },
+              { name: "💬 Discord", value: discord, inline: true },
+              { name: "🗓️ วันที่เข้า", value: joinDate, inline: true },
+              { name: "🧬 ตำแหน่ง", value: role, inline: true }
+            ],
+            timestamp: new Date().toISOString()
+          }
+        ]
+      };
+
+      fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }).then(res => {
+        if (res.ok) {
+          alert("เพิ่มสมาชิกเรียบร้อย!");
+          document.getElementById("name").value = "";
+          document.getElementById("discord").value = "";
+          document.getElementById("joinDate").value = "";
+          document.getElementById("role").value = "";
+        } else {
+          alert("เพิ่มไม่สำเร็จ ลองใหม่อีกครั้ง");
+        }
+      });
+    }
+  </script>
+</body>
+</html>
